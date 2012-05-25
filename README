@@ -1,0 +1,20 @@
+Capcuan adalah blogger aggregator yang dibuat dengan Blogger API, CI, dan SimplePie library. Inti dari Capcuan adalah 'melempar' setiap hasil feed per satuan waktu (misal tiap 1 hari sekali) ke blogspot.com via Blogger API.
+
+Tujuan utama apps adalah sebagai sarana belajar
+- Blogger API (terutama google service)
+- OAuth (authentication method)
+- CodeIgniter
+- Parsing feed using SimplePie di CodeIgniter
+
+Hasil akhir dari apps bisa dilihat di http://ilmukomputerugm2004.blogspot.com. Kendala : 
+- Blogger hanya mengizinkan jumlah post <=50 per hari. Artinya feed yang sudah terlanjur disedot ke Capcuan, mesti disimpan untuk dipublish pada hari berikutnya.
+- Maksimum query hanya 1000 request per hari untuk Blogger API. Hanya bisa lebih dari itu bila ada request ke Brett Morgan at google.com
+- Tidak bisa mengetahui updated post. Bila original post berubah (dimodifikasi) maka postingan yang lama tidak berubah, namun akan dibuatkan postingan terbaru.
+
+Cara kerja : 
+0. Pertama Capcuan akan ambil feed dari rss yang sudah kita masukkan sebelumnya. Jumlah RSS tidak terbatas.
+1. Akan ada cron yang menyala sehari sekali (untuk Capcuan, tiap hari jam 19:15 +7). Cron ini akan mengambil feed, melihat tanggalnya, dan membandingkan dengan isi database. Bila 'last_update' tidak berubah, artinya tidak perlu posting. Bila berbeda, maka feed akan diambil contentnya, titlenya, dan published_date-nya.
+2. Cron akan membuat postingan di account blogspot yang sudah disediakan menggunakan Blogger API. Di dalam content setiap post, disisipkan link menuju original post dari content yang bersangkutan, plus diberi labels sesuai dengan authornya.
+3. Post akan tampil di blogspot.com sesuai dengan published_date-nya, dan diurutkan berdasarkan pub_date. Bila post berhasil dipublish, maka nilai last_update pada feed bersangkutan akan diupdate.
+
+Demikian. Semoga bermanfaat. Kritik dan saran bisa dialamatkan ke email saya di prabowo.murti at gmail. Terima kasih.
